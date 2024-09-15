@@ -1,10 +1,15 @@
 package com.impact.pokemon;
 
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * !! Feel free to change everything about this !!
@@ -13,13 +18,31 @@ import java.io.IOException;
  */
 @Component
 public class PokemonData {
-    private final File file;
+    private Map<String, Pokemon> nameToPokemon;
 
     PokemonData() throws IOException {
-        file = new ClassPathResource("data/pokemon.csv").getFile();
+        InputStream inputStream = new ClassPathResource("data/pokemon.csv").getInputStream();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+
+        List<Pokemon> pokemons = this.loadCsvToBeans(reader);
+        this.nameToPokemon = pokemons
+                .stream()
+                .collect(Collectors.toMap(Pokemon::getName, pokemon -> pokemon));
     }
 
-    File getFile() {
-        return file;
+    private List<Pokemon> loadCsvToBeans(BufferedReader reader) {
+        CsvToBean<Pokemon> csvToBean = new CsvToBeanBuilder<Pokemon>(reader)
+                .withType(Pokemon.class)
+                .build();
+        return csvToBean.parse();
+    }
+
+
+    public Set<String> getListOfPokemons() {
+        return this.nameToPokemon.keySet();
+    }
+
+    public Pokemon getPokemonByName(String name) {
+        return this.nameToPokemon.get(name);
     }
 }

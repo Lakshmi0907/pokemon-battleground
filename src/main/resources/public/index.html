@@ -6,14 +6,46 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
 </head>
 <body>
-<div id="app" class="section is-size-2">
-    <p>{{ pokemonName }} wins</p>
-    <p>
-        <button v-on:click="battle()">Battle!</button>
-    </p>
-    <hr/>
-    <img class="sprite" v-bind:src="'https://img.pokemondb.net/sprites/home/normal/' + pokemonName.toLowerCase() + '.png'"/>
-</div>
-<script src="app.js"></script>
-</body>
+    <div id="app" class="section is-size-2">
+        <header>
+            <h1 class="title is-1 has-text-centered">Pokemon Battleground</h1>
+        </header>
+
+        <hr/>
+
+        <section class="columns is-vcentered">
+            <div class="column is-5 is-flex is-flex-direction-column is-flex-wrap-wrap is-justify-content-center is-align-content-end">
+                <div class="select is-medium is-rounded is-warning">
+                    <select v-model="selectedLeft">
+                        <option v-for="pokemon in pokemons" :key="pokemon">{{ pokemon }}</option>
+                    </select>
+                </div>
+                <img class="sprite" v-if="selectedLeft" v-bind:src="'https://img.pokemondb.net/sprites/home/normal/' + selectedLeft.toLowerCase() + '.png'"/>
+            </div>
+            <div class="column is-2 has-text-centered">
+                <p class="is-size-4">vs</p>
+            </div>
+            <div class="column is-5 is-flex is-flex-direction-column is-flex-wrap-wrap is-justify-content-center is-align-content-start">
+                <div class="select is-medium is-rounded is-warning">
+                    <select v-model="selectedRight">
+                        <option v-for="pokemon in pokemons" :key="pokemon">{{ pokemon }}</option>
+                    </select>
+                </div>
+                <img class="sprite" v-if="selectedRight" v-bind:src="'https://img.pokemondb.net/sprites/home/normal/' + selectedRight.toLowerCase() + '.png'"/>
+            </div>
+        </section>
+        
+        <p class="has-text-centered">
+            <button class="button is-danger" v-on:click="battle()">Battle!</button>
+        </p>
+
+        <hr/>
+
+        <p class="has-text-centered">{{ pokemonName }} wins</p>
+        <div class="is-flex is-justify-content-center">
+            <img class="sprite" v-if="pokemonName != '________'" v-bind:src="'https://img.pokemondb.net/sprites/home/normal/' + pokemonName.toLowerCase() + '.png'"/>
+        </div>
+    </div>
+    <script src="app.js"></script>
+    </body>
 </html>

@@ -2,6 +2,7 @@ package com.impact.pokemon;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -10,25 +11,26 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 public class PokemonController {
 
     private static final Logger logger = LoggerFactory.getLogger(PokemonController.class);
 
-    @Resource
-    private PokemonData data;
+    @Autowired
+    PokemonService pokemonService;
 
     @GetMapping("attack")
     public Map<String, Object> attack(String pokemonA, String pokemonB) throws IOException {
         logger.info("Requested pokemonA: {}, pokemonB: {}", pokemonA, pokemonB);
 
         // This is just an example of how to read the file contents into a List. Change or refactor as needed
-        List<String> pokemon = Files.readAllLines(data.getFile().toPath());
+        return pokemonService.battle(pokemonA, pokemonB);
+    }
 
-        // This is just an example of a response that is hardcoded - Change or refactor as needed
-        return Map.of(
-                "winner", "Bulbasaur",
-                "hitPoints", 120);
+    @GetMapping("list-pokemons")
+    public Set<String> listPokemons() {
+        return pokemonService.listAllPokemons();
     }
 }
