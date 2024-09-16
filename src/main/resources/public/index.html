@@ -36,7 +36,7 @@
         </section>
         
         <p class="has-text-centered">
-            <button class="button is-danger" v-on:click="battle()">Battle!</button>
+            <button class="button is-danger" :disabled="selectedLeft == '' || selectedRight == ''" v-on:click="battle()">Battle!</button>
         </p>
 
         <hr/>
